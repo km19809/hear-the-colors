@@ -2,7 +2,7 @@
 > 사진을 들어보세요. Hear your images.
 
 ## 들어보기 Try it!
-[Here](https://km19809.github.io/hear-the-colors/public/index.html)
+[바로가기 Here](https://km19809.github.io/hear-the-colors/public/index.html)
 
 ## 사용방법 How to use
 1. 사진을 고릅니다. Choose your image.
@@ -15,7 +15,7 @@ Hear the sound of the pixels. (a bit noisy, sorry!)
 색상`Hue`은 진동수를 설정하는 데 사용됩니다.\
 진동수에 색상이 선형으로 대응할지, 지수적으로 대응할지 정할 수 있습니다.\
 채도`Saturation`는 현재 사용되지 않습니다. [제안이 있다면?](https://github.com/km19809/hear-the-colors/issues)\
-밝기`Value`는 음량에 사용됩니다.\
+밝기`Value`는 음량에 사용됩니다.
 
 This web app uses a pixel's HSV values.\
 It uses `Hue` for the frequency of sounds.\
