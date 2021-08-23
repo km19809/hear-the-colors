@@ -2,7 +2,7 @@
 > 사진을 들어보세요. Hear your images.
 
 ## 들어보기 Try it!
-[바로가기 Here](https://km19809.github.io/hear-the-colors/public/index.html)
+[바로가기 Here](https://km19809.github.io/hear-the-colors/demo/index.html)
 
 ## 사용방법 How to use
 1. 사진을 고릅니다. Choose your image.
