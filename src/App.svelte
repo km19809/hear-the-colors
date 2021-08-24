@@ -1,10 +1,11 @@
 <script>
-	import { bind } from "svelte/internal";
 import * as Tone from "tone";
 	import { findPosition, rgbToHsv, hsvToAudio } from "./utils.js";
 
 	let canvasElement;
 	let instrument = null;
+	let effector = null;
+	let distortionRatio=0.5;
 	let isHzLinear=false;
 	let minHz=50;
 	let maxHz=5000;
@@ -12,6 +13,7 @@ import * as Tone from "tone";
 	async function initTone() {
 		await Tone.start();
 		console.log("audio is ready");
+		effector=new Tone.Distortion(0.5).toDestination();
 		instrument = new Tone.Synth({
 			volume: 0,
 			detune: 0,
@@ -36,25 +38,36 @@ import * as Tone from "tone";
 				harmonicity: 0.5,
 				modulationType: "sine3",
 			},
-		}).toDestination();
+		}).connect(effector);
+	}
+    function playPixel(ctx,x,y){
+		const p = ctx.getImageData(x, y, 1, 1).data;
+		const [r, g, b] = p;
+		const hsv = rgbToHsv({ r: r, g: g, b: b });
+		if (instrument) {
+			const { hz, velocity, distortion } = hsvToAudio(hsv,isHzLinear,minHz,maxHz,distortionRatio);
+			
+			instrument.triggerRelease();
+			if (effector){
+				effector.distortion=distortion;
+			}
+			instrument.triggerAttack(hz, Tone.now(), velocity);
+		}
+	}
+	function onTouchMove(event) {
+		event.preventDefault()
+		const pos = findPosition(this);
+		const x = event.touches[0].pageX - pos.x;
+		const y = event.touches[0].pageY - pos.y;
+		const ctx = this.getContext("2d");
+		playPixel(ctx,x,y)
 	}
 	function onMouseMove(event) {
 		const pos = findPosition(this);
 		const x = event.pageX - pos.x;
 		const y = event.pageY - pos.y;
-		const c = this.getContext("2d");
-		const p = c.getImageData(x, y, 1, 1).data;
-		const [r, g, b] = p;
-		const hsv = rgbToHsv({ r: r, g: g, b: b });
-		const { h, s, v } = hsv;
-		//console.log(`x:${x} y:${y} rgb:(${r},${g},${b}), hsv:(${h},${s},${v})`);
-		if (instrument) {
-			const { hz, velocity, distortion } = hsvToAudio(hsv,isHzLinear,minHz,maxHz);
-			console.log(`hsv:(${h},${s},${v}), hz:${hz}, v:${velocity}`);
-			instrument.triggerRelease();
-			//instrument.triggerAttackRelease(hz,"+0","8n",velocity);
-			instrument.triggerAttack(hz, Tone.now(), velocity);
-		}
+		const ctx = this.getContext("2d");
+		playPixel(ctx,x,y)
 	}
 
 	function stopSound() {
@@ -93,6 +106,8 @@ import * as Tone from "tone";
 		<b>Options</b><br/>
 		<label for="linearHz">Increase Hz linearly: </label>
 		<input type="checkbox" id="linearHz" bind:checked={isHzLinear}><br/>
+		<label for="distortionAmount">Distortion amount: </label>
+		<input type="range" id="distortionAmount" min="0" max="1" step="0.05" bind:value={distortionRatio}><br/>
 		<label for="minHz">Minimum Hz: </label>
 		<input type="number" min="20" max={maxHz-1} bind:value={minHz} id="minHz"><br/>
 		<label for="maxHz">Maximum Hz: </label>
@@ -108,6 +123,7 @@ import * as Tone from "tone";
 	<canvas
 		id="canvas"
 		bind:this={canvasElement}
+		on:touchmove={onTouchMove}
 		on:mousemove={onMouseMove}
 		on:mouseleave={stopSound}
 	/>

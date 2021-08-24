@@ -30,14 +30,14 @@ function rgbToHsv(rgb){
     return{h:h,s:s,v:cMax}
 }
 
-function hsvToAudio(hsv, isLinear=false, minHz=50, maxHz=5000){
+function hsvToAudio(hsv, isLinear=false, minHz=50, maxHz=5000, distortionRatio=0.5){
     const {h,s,v}=hsv;
     if (isLinear)
     {
         return {hz:minHz+(maxHz-minHz)*h/360,velocity:v,distortion:s}
     }
     const step=Math.pow(maxHz-minHz+1,1/360);
-    return {hz:minHz+Math.pow(step,h),velocity:v,distortion:s}
+    return {hz:minHz+Math.pow(step,h),velocity:v,distortion:(1-s)*distortionRatio}
 }
 
 export {findPosition, rgbToHsv, hsvToAudio};
