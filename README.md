@@ -14,13 +14,13 @@ Hear the sound of the pixels. (a bit noisy, sorry!)
 사진의 HSV 값을 사용해 소리로 변환합니다.\
 색상`Hue`은 진동수를 설정하는 데 사용됩니다.\
 진동수에 색상이 선형으로 대응할지, 지수적으로 대응할지 정할 수 있습니다.\
-채도`Saturation`는 현재 사용되지 않습니다. [제안이 있다면?](https://github.com/km19809/hear-the-colors/issues)\
+채도`Saturation`는 왜곡 효과에 사용됩니다.\
 밝기`Value`는 음량에 사용됩니다.
 
 This web app uses a pixel's HSV values.\
 It uses `Hue` for the frequency of sounds.\
 You can select either the hue proportional to the frequency linearly or exponentially.\
-`Saturation` does nothing now; [Do you have any ideas?](https://github.com/km19809/hear-the-colors/issues)\
+`Saturation` corresponds to the distortion effect \
 `Value` corresponds to the volume of sounds.
 
 
